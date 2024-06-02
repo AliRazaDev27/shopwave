@@ -17,6 +17,14 @@ async function loginController(req, res) {
     return res.status(400).send({ success: false, message: error.message })
   }
 }
+async function logoutController(req, res) {
+  try {
+    return res.cookie("token", "", { httpOnly: true, secure: true, expires: new Date(0) }).status(200).send({ success: true, message: "logout successfull" })
+  }
+  catch (error) {
+    return res.status(500).send({ success: false, message: error.message })
+  }
+}
 async function registerController(req, res) {
   try {
     const { name, email, password } = req.body;
@@ -27,4 +35,14 @@ async function registerController(req, res) {
     return res.status(400).send({ success: false, message: error.message })
   }
 }
-export { loginController, registerController }
+async function allUsersController(req, res) {
+  try {
+    const users = await User.find();
+    return res.status(200).send({ success: true, message: "all users", data: users, length: users.length })
+  } catch (error) {
+    return res.status(400).send({ success: false, message: error.message })
+  }
+}
+
+
+export { loginController, logoutController, registerController, allUsersController }

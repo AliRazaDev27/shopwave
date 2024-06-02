@@ -1,3 +1,6 @@
+import { register } from "../store/features/auth/authSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,10 +13,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-import axios from "axios"
 import { toast } from "react-toastify"
+
 export default function RegisterPage() {
+  const dispatch = useDispatch()
+  const status = useSelector((state) => state.auth.status)
   const [inputValues, setInputValues] = useState({})
+  const navigate = useNavigate()
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -22,13 +28,19 @@ export default function RegisterPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post("http://localhost:3000/api/users/register", inputValues, { headers: { "ContentType": "application/json" } }).then((res) => {
+    dispatch(register(inputValues)).unwrap().then((res) => {
+      if (res?.success == true) {
+        toast.success(res.message, { autoClose: 1500 })
+        navigate("/")
+      }
+      else {
+        toast.error(res.message)
+      }
       console.log(res)
-      toast.success("user created successfully")
     }).catch((err) => {
-      console.log(err)
-      toast.error("something went wrong")
+      toast.error(err)
     })
+
   }
   return (
     <>
@@ -75,7 +87,7 @@ export default function RegisterPage() {
                     value={inputValues.password || ""}
                     onChange={handleChange} />
                 </div>
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" disabled={status == "loading" ? true : false}>
                   Create an account
                 </Button>
                 <Button variant="outline" className="w-full">

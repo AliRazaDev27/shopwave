@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,14 +12,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Link } from "react-router-dom"
-import axios from "axios"
 import { toast } from "react-toastify"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { login } from "../store/features/auth/authSlice"
 
 export default function LoginPage() {
-
+  const navigate = useNavigate()
   const [inputValues, setInputValues] = useState({})
+  const status = useSelector((state) => state.auth.status)
   const dispatch = useDispatch()
   const handleChange = (event) => {
     const name = event.target.name;
@@ -32,7 +33,8 @@ export default function LoginPage() {
       .unwrap()
       .then((res) => {
         if (res?.success == true) {
-          toast.success(res.message)
+          toast.success(res.message, { autoClose: 1500 })
+          navigate('/admin')
         }
         else {
           toast.error(res.message)
@@ -40,7 +42,7 @@ export default function LoginPage() {
         console.log(res)
       })
       .catch((err) => {
-        console.log(err)
+        toast.error(err)
       })
   }
   return (
@@ -78,11 +80,13 @@ export default function LoginPage() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">Sign in</Button>
+            <Button type="submit" className="w-full" disabled={status == "loading" ? true : false}>
+              {status == "loading" ? "Loading..." : "Sign in"}
+            </Button>
           </CardFooter>
 
           <div className="mb-4 text-center text-sm">
-            Don't have an account?{" "}
+            Don&apos;t have an account?
             <Link to="/register" className="underline">
               Sign up
             </Link>
