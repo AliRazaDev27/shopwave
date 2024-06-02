@@ -8,14 +8,26 @@ import Orders from "./Pages/Admin/Orders.jsx"
 import Products from "./Pages/Admin/Products.jsx"
 import Users from "./Pages/Admin/Users.jsx"
 import HomePage from "./Pages/HomePage.jsx"
+import About from "./Pages/About.jsx"
+import Shop from "./Pages/Shop.jsx"
+import Contact from "./Pages/Contact.jsx"
 // import HomePage from "./Pages/HomePage.jsx"
 import { ToastContainer } from 'react-toastify';
+import Navbar from './components/Navbar.jsx'
 function App() {
   return (
     <>
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* admin routes */}
           <Route path="/admin" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="customers" element={<Customers />} />
@@ -23,8 +35,6 @@ function App() {
             <Route path="products" element={<Products />} />
             <Route path="users" element={<Users />} />
           </Route>
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
         </Routes>
         <ToastContainer />
       </BrowserRouter>
