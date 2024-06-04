@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom"
 import { CircleUser, Menu, Package2, Search } from "lucide-react"
-
+import { useDispatch } from "react-redux"
+import { logout } from "../store/features/auth/authSlice"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -14,7 +17,24 @@ import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { useSelector } from "react-redux"
 export default function Navbar() {
-  const user = useSelector((state) => state.auth.user.user)
+  const user = useSelector((state) => state.auth?.user?.user)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  function handleLogout() {
+    console.log("logout")
+    dispatch(logout()).unwrap().then((res) => {
+      if (res?.success == true) {
+        toast.success(res.message, { autoClose: 1500 })
+        navigate("/login")
+      }
+      else {
+        toast.error(res.message)
+      }
+      console.log(res)
+    }).catch((err) => {
+      toast.error(err)
+    })
+  }
   return (
     <>
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -119,7 +139,7 @@ export default function Navbar() {
           <div>
             {user == null ?
 
-              <div>
+              <div className="flex gap-2">
                 <Button><Link to="/login">Login</Link></Button>
                 <Button><Link to="/register">Register</Link></Button>
               </div> :
@@ -137,7 +157,7 @@ export default function Navbar() {
                     <DropdownMenuItem>{user.role === 1 ? <Link to="/admin">Dashboard</Link> : <Link to="/profile">Profile</Link>}</DropdownMenuItem>
                     <DropdownMenuItem>Support</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                    <DropdownMenuItem><Button onClick={() => handleLogout()}>Logout</Button></DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>

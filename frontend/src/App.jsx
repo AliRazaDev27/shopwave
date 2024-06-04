@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import RegisterPage from "./Pages/RegisterPage.jsx"
 import LoginPage from "./Pages/LoginPage.jsx"
 import DashboardLayout from "./Pages/Admin/DashboardLayout.jsx"
@@ -15,29 +15,29 @@ import Contact from "./Pages/Contact.jsx"
 import { ToastContainer } from 'react-toastify';
 import Navbar from './components/Navbar.jsx'
 function App() {
+  const location = useLocation()
+  const isAdminRoute = location.pathname.startsWith('/admin')
   return (
     <>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
+      {!isAdminRoute && <Navbar />}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
-          {/* admin routes */}
-          <Route path="/admin" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="customers" element={<Customers />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="products" element={<Products />} />
-            <Route path="users" element={<Users />} />
-          </Route>
-        </Routes>
-        <ToastContainer />
-      </BrowserRouter>
+        {/* admin routes */}
+        <Route path="/admin" element={<DashboardLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="customers" element={<Customers />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="products" element={<Products />} />
+          <Route path="users" element={<Users />} />
+        </Route>
+      </Routes>
+      <ToastContainer />
     </>
   )
 }

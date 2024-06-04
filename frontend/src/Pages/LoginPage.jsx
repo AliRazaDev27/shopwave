@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import Spinner from "../components/Spinner"
 import {
   Card,
   CardContent,
@@ -81,7 +82,7 @@ export default function LoginPage() {
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full" disabled={status == "loading" ? true : false}>
-              {status == "loading" ? "Loading..." : "Sign in"}
+              {status == "loading" ? <Spinner /> : "Sign in"}
             </Button>
           </CardFooter>
 
