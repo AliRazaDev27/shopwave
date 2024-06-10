@@ -34,8 +34,9 @@ export default function LoginPage() {
       .unwrap()
       .then((res) => {
         if (res?.success == true) {
+          window.sessionStorage.setItem('user', res.user)
           toast.success(res.message, { autoClose: 1500 })
-          navigate('/admin')
+          navigate('/')
         }
         else {
           toast.error(res.message)

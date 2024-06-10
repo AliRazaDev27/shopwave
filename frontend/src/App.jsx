@@ -11,7 +11,7 @@ import HomePage from "./Pages/HomePage.jsx"
 import About from "./Pages/About.jsx"
 import Shop from "./Pages/Shop.jsx"
 import Contact from "./Pages/Contact.jsx"
-// import HomePage from "./Pages/HomePage.jsx"
+import Categories from "./Pages/Admin/Categories.jsx"
 import { ToastContainer } from 'react-toastify';
 import Navbar from './components/Navbar.jsx'
 function App() {
@@ -35,6 +35,7 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="products" element={<Products />} />
           <Route path="users" element={<Users />} />
+          <Route path="categories" element={<Categories />} />
         </Route>
       </Routes>
       <ToastContainer />

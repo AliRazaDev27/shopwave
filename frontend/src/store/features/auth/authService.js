@@ -6,7 +6,6 @@ const loginUser = async (inputValues) => {
       .post("http://localhost:3000/api/users/login",
         inputValues,
         { withCredentials: true, headers: { "ContentType": "application/json" } })
-
     window.localStorage.setItem("user", JSON.stringify(axiosResponse.data))
     return axiosResponse.data
   } catch (error) {
@@ -34,7 +33,7 @@ const logoutUser = async () => {
     const axiosResponse = await axios
       .get("http://localhost:3000/api/users/logout",
         { withCredentials: true, headers: { "ContentType": "application/json" } })
-
+    window.localStorage.removeItem("user")
     return axiosResponse.data
   } catch (error) {
     const errorMessage = error.response?.data?.message || error.message || "Something went wrong"

@@ -6,7 +6,7 @@ async function loginController(req, res) {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' },
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '10 days' },
       )
       user.password = undefined
       return res.cookie("token", token, { httpOnly: true, secure: true }).status(200).send({ success: true, message: "login successfull", user })

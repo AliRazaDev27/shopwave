@@ -3,6 +3,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import userRouter from './src/routes/userRoutes.js'
+import categoryRouter from './src/routes/categoryRoutes.js'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use(cors({ origin: FRONTEND_URL, credentials: true }))
 app.use(cookieParser())
 app.use('/api/users', userRouter)
+app.use("/api/categories", categoryRouter)
 
 const PORT = process.env.PORT;
 // Server listening
