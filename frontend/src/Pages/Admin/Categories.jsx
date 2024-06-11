@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -35,50 +34,49 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addCategory, getAllCategories, deleteCategory, updateCategory } from "@/store/features/categories/categorySlice.js"
+
 export default function Categories() {
   const categories = useSelector((state) => state.category?.categories?.data)
   const status = useSelector((state) => state.category?.status)
   const error = useSelector((state) => state.category?.error)
-  // const [inputValues, setInputValues] = useState({})
   const addRef = useRef("")
   const updateRef = useRef("")
   const dispatch = useDispatch()
-  // function handleInputChange(e) {
-  //   const { name, value } = e.target
-  //   setInputValues({ ...inputValues, [name]: value })
-  // }
+
   function handleSumbit(e) {
     e.preventDefault()
     const inputValues = { name: addRef.current.value }
-    console.log(inputValues)
     dispatch(addCategory(inputValues)).unwrap().then((res) => {
-      console.log(res)
+      toast.success(res.message, { autoClose: 1000 })
       dispatch(getAllCategories())
-      addRef.current = ""
+      addRef.current.value = ""
     }).catch((err) => {
+      toast.error(err)
       console.log(err)
     })
   }
+
   function handleDelete(id) {
     dispatch(deleteCategory(id)).unwrap().then((res) => {
-      console.log(res)
+      toast.success(res.message, { autoClose: 1000 })
       dispatch(getAllCategories())
     }).catch((err) => {
+      toast.error(err)
       console.log(err)
     })
   }
   function handleUpdate(id) {
     const name = updateRef.current.value
-    console.log(`name ${name} id ${id}`)
     const data = { name: name }
     const input = [id, data]
     dispatch(updateCategory(input)).unwrap().then((res) => {
-      console.log(res)
+      toast.success(res.message, { autoClose: 1000 })
       dispatch(getAllCategories())
     }).catch((err) => {
+      toast.error(err)
       console.log(err)
     })
   }
@@ -100,11 +98,16 @@ export default function Categories() {
     }
   }
   useEffect(() => {
-    console.log("useEffect")
     dispatch(getAllCategories())
   }, [dispatch])
+
   if (status === "loading") {
-    return <p>Loading...</p>
+    return (
+      <div className="flex justify-center items-center h-screen font-3xl">
+        Loading...
+      </div>
+
+    )
   }
   if (status === "failed") {
     toast.error(error)
@@ -220,7 +223,7 @@ export default function Categories() {
           </CardContent>
           <CardFooter>
             <div className="text-xs text-muted-foreground">
-              Showing <strong>1-10</strong> of <strong>32</strong> products
+              Showing <strong>1-10</strong> of <strong>{categories && categories.length}</strong> products
             </div>
           </CardFooter>
         </Card>
