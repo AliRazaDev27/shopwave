@@ -1,4 +1,17 @@
+import { toast } from "react-toastify"
 import { MoreHorizontal } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,34 +35,69 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addCategory, getAllCategories } from "@/store/features/categories/categorySlice.js"
+import { addCategory, getAllCategories, deleteCategory, updateCategory } from "@/store/features/categories/categorySlice.js"
 export default function Categories() {
   const categories = useSelector((state) => state.category?.categories?.data)
   const status = useSelector((state) => state.category?.status)
   const error = useSelector((state) => state.category?.error)
-  console.log(`categories: ${categories}`)
-  console.log(`status: ${status}`)
-  console.log(`error: ${error}`)
-  const [inputValues, setInputValues] = useState({})
+  // const [inputValues, setInputValues] = useState({})
+  const addRef = useRef("")
+  const updateRef = useRef("")
   const dispatch = useDispatch()
-  function handleInputChange(e) {
-    const { name, value } = e.target
-    setInputValues({ ...inputValues, [name]: value })
-  }
+  // function handleInputChange(e) {
+  //   const { name, value } = e.target
+  //   setInputValues({ ...inputValues, [name]: value })
+  // }
   function handleSumbit(e) {
     e.preventDefault()
+    const inputValues = { name: addRef.current.value }
     console.log(inputValues)
     dispatch(addCategory(inputValues)).unwrap().then((res) => {
       console.log(res)
       dispatch(getAllCategories())
-      setInputValues({})
+      addRef.current = ""
     }).catch((err) => {
       console.log(err)
     })
+  }
+  function handleDelete(id) {
+    dispatch(deleteCategory(id)).unwrap().then((res) => {
+      console.log(res)
+      dispatch(getAllCategories())
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+  function handleUpdate(id) {
+    const name = updateRef.current.value
+    console.log(`name ${name} id ${id}`)
+    const data = { name: name }
+    const input = [id, data]
+    dispatch(updateCategory(input)).unwrap().then((res) => {
+      console.log(res)
+      dispatch(getAllCategories())
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+  function dateFormat(dateString) {
+    if (dateString === null || dateString === undefined) {
+      return
+    }
+    if (dateString === "") {
+      return
+    }
+    if (typeof dateString === "string") {
+      const [year, month, time] = dateString.split("-")
+      const day = time.split("T")[0]
+      let formatedDateString = `${day}-${month}-${year}`
+      return formatedDateString
+    }
+    else {
+      return
+    }
   }
   useEffect(() => {
     console.log("useEffect")
@@ -59,7 +107,7 @@ export default function Categories() {
     return <p>Loading...</p>
   }
   if (status === "failed") {
-    return <p>{error}</p>
+    toast.error(error)
   }
   return (
     <>
@@ -74,9 +122,9 @@ export default function Categories() {
               type="text"
               id="name"
               name="name"
+              ref={addRef}
               required
-              value={inputValues.name || ""}
-              onChange={handleInputChange}
+              defaultValue=""
             />
             <Button>Add</Button>
           </CardContent>
@@ -115,22 +163,55 @@ export default function Categories() {
                     </TableCell>
                     <TableCell>{category.slug}</TableCell>
                     <TableCell>
-                      {category.createdAt || "27 October 1999"}
+                      {category.createdAt ? dateFormat(category.createdAt) : "27-10-1999"}
                     </TableCell>
                     <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button aria-haspopup="true" size="icon" variant="ghost">
-                            <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Toggle menu</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>Delete</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Dialog>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button aria-haspopup="true" size="icon" variant="ghost">
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Toggle menu</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+                            <DialogTrigger asChild>
+                              <DropdownMenuItem>
+                                <button type="button" onClick={() => console.log('edit')}>Edit</button>
+                              </DropdownMenuItem>
+                            </DialogTrigger>
+                            <DropdownMenuItem>
+                              <button type="button" onClick={() => handleDelete(category.slug)}>Delete</button>
+                            </DropdownMenuItem>
+
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle>Edit Category</DialogTitle>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="username" className="text-right">
+                                Name
+                              </Label>
+                              <Input
+                                id="username"
+                                ref={updateRef}
+                                defaultValue=""
+                                placeholder="Name"
+                                className="col-span-3"
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button type="submit" onClick={() => handleUpdate(category.slug)}>Save changes</Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -147,3 +228,4 @@ export default function Categories() {
     </>
   )
 }
+
