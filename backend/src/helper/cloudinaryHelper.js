@@ -15,7 +15,7 @@ const uploadImageOnCloudinary = async (filePath, folderName) => {
     try {
       fs.unlinkSync(filePath)
     } catch (error) {
-      console.log("failed to delete image from server", error)
+      console.log("failed to delete image from server")
     }
     return { public_id: result.public_id, secure_url: result.secure_url }
   }
@@ -23,4 +23,12 @@ const uploadImageOnCloudinary = async (filePath, folderName) => {
     throw new Error(error)
   }
 }
-export { uploadImageOnCloudinary }
+const deleteImageFromCloudinary = async (public_id) => {
+  try {
+    return await cloudinary.uploader.destroy(public_id)
+  }
+  catch (error) {
+    throw new Error(error)
+  }
+}
+export { uploadImageOnCloudinary, deleteImageFromCloudinary }

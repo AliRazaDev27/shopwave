@@ -1,6 +1,6 @@
 import fs from "fs"
 import product from "../models/productModel.js"
-import { uploadImageOnCloudinary } from "../helper/cloudinaryHelper.js"
+import { uploadImageOnCloudinary, deleteImageFromCloudinary } from "../helper/cloudinaryHelper.js"
 
 const createProduct = async (req, res) => {
   console.log("inside controller")
@@ -29,6 +29,8 @@ const getAllProducts = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const result = await product.findOneAndDelete({ _id: req.params.id })
+    const public_id = result.picture.public_id
+    await deleteImageFromCloudinary(public_id)
     res.status(200).send({ success: true, message: "product deleted successfully" })
     console.log(result)
   } catch (error) {
