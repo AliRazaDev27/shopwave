@@ -1,6 +1,4 @@
 import { MoreHorizontal } from "lucide-react"
-
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -29,18 +27,37 @@ import { Link } from "react-router-dom"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { dateFormat } from "../../helper/format"
+import { useSelector, useDispatch } from "react-redux"
+import { getAllProducts, deleteProduct } from "../../store/features/products/productSlice.js"
+import { toast } from "react-toastify"
 
 export default function Products() {
-  const [products, setProducts] = useState([])
+  // const [products, setProducts] = useState([])
+  const products = useSelector((state) => state.product?.products?.data)
+  const dispatch = useDispatch()
   console.log(products)
+  function handleDelete(id) {
+    dispatch(deleteProduct(id))
+      .unwrap().then((res) => {
+        toast.success(res.message, { autoClose: 1000 })
+        dispatch(getAllProducts())
+      }).catch((err) => {
+        toast.error(err)
+      })
+
+  }
+  // console.log(products)
   useEffect(() => {
-    axios.get("http://localhost:3000/api/products").then((response) => {
-      setProducts(response.data.data)
-    })
-      .catch((err) => { console.log(err) })
-
-
-  }, [])
+    // axios.get("http://localhost:3000/api/products").then((response) => {
+    //   setProducts(response.data.data)
+    // })
+    //   .catch((err) => { console.log(err) })
+    try {
+      dispatch(getAllProducts())
+    } catch (err) {
+      console.log(err)
+    }
+  }, [dispatch])
   return (
     <>
       <div className="flex justify-between items-center">
@@ -108,7 +125,7 @@ export default function Products() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>Delete</DropdownMenuItem>
+                          <DropdownMenuItem><button type="button" onClick={() => handleDelete(product._id)}>Delete</button></DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

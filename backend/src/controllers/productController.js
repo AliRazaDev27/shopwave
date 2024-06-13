@@ -26,4 +26,14 @@ const getAllProducts = async (req, res) => {
     res.status(400).send({ success: false, message: error.message })
   }
 }
-export { createProduct, getAllProducts }
+const deleteProduct = async (req, res) => {
+  try {
+    const result = await product.findOneAndDelete({ _id: req.params.id })
+    res.status(200).send({ success: true, message: "product deleted successfully" })
+    console.log(result)
+  } catch (error) {
+    res.status(400).send({ success: false, message: error.message })
+  }
+
+}
+export { createProduct, getAllProducts, deleteProduct }
