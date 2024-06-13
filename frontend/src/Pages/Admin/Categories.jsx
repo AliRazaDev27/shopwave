@@ -37,6 +37,7 @@ import {
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addCategory, getAllCategories, deleteCategory, updateCategory } from "@/store/features/categories/categorySlice.js"
+import { dateFormat } from "../../helper/format"
 
 export default function Categories() {
   const categories = useSelector((state) => state.category?.categories?.data)
@@ -79,23 +80,6 @@ export default function Categories() {
       toast.error(err)
       console.log(err)
     })
-  }
-  function dateFormat(dateString) {
-    if (dateString === null || dateString === undefined) {
-      return
-    }
-    if (dateString === "") {
-      return
-    }
-    if (typeof dateString === "string") {
-      const [year, month, time] = dateString.split("-")
-      const day = time.split("T")[0]
-      let formatedDateString = `${day}-${month}-${year}`
-      return formatedDateString
-    }
-    else {
-      return
-    }
   }
   useEffect(() => {
     dispatch(getAllCategories())

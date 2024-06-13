@@ -7,6 +7,7 @@ import Customers from "./Pages/Admin/Customers.jsx"
 import Orders from "./Pages/Admin/Orders.jsx"
 import Products from "./Pages/Admin/Products.jsx"
 import Users from "./Pages/Admin/Users.jsx"
+import AddProduct from './Pages/Admin/AddProduct.jsx'
 import HomePage from "./Pages/HomePage.jsx"
 import About from "./Pages/About.jsx"
 import Shop from "./Pages/Shop.jsx"
@@ -34,6 +35,7 @@ function App() {
           <Route path="customers" element={<Customers />} />
           <Route path="orders" element={<Orders />} />
           <Route path="products" element={<Products />} />
+          <Route path="products/add" element={<AddProduct />} />
           <Route path="users" element={<Users />} />
           <Route path="categories" element={<Categories />} />
         </Route>

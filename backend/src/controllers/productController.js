@@ -1,7 +1,9 @@
+import fs from "fs"
 import product from "../models/productModel.js"
 import { uploadImageOnCloudinary } from "../helper/cloudinaryHelper.js"
 
 const createProduct = async (req, res) => {
+  console.log("inside controller")
   try {
     const { title, description, price, category, user } = req.body
     const picture = req.file?.path
@@ -16,4 +18,12 @@ const createProduct = async (req, res) => {
     res.status(400).send({ success: false, message: error.message })
   }
 }
-export { createProduct }
+const getAllProducts = async (req, res) => {
+  try {
+    const products = await product.find({}).populate("category").populate("user")
+    res.status(200).send({ success: true, message: "all products found", data: products })
+  } catch (error) {
+    res.status(400).send({ success: false, message: error.message })
+  }
+}
+export { createProduct, getAllProducts }
