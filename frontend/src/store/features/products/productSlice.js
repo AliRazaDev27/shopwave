@@ -34,6 +34,15 @@ export const deleteProduct = createAsyncThunk('product/deleteProduct', async (id
     return thunkAPI.rejectWithValue(error)
   }
 })
+export const updateProduct = createAsyncThunk('product/updateProduct', async (inputValues, thunkAPI) => {
+  try {
+    const response = await productService.updateProduct(inputValues)
+    return response
+  }
+  catch (error) {
+    return thunkAPI.rejectWithValue(error)
+  }
+})
 
 const productSlice = createSlice({
   name: 'product',
@@ -72,6 +81,16 @@ const productSlice = createSlice({
       state.status = "failed"
       state.error = action.payload
     }).addCase(deleteProduct.pending, (state) => {
+      state.status = "loading"
+      state.error = null
+    })
+    builder.addCase(updateProduct.fulfilled, (state, action) => {
+      state.status = "success"
+      state.error = null
+    }).addCase(updateProduct.rejected, (state, action) => {
+      state.status = "failed"
+      state.error = action.payload
+    }).addCase(updateProduct.pending, (state) => {
       state.status = "loading"
       state.error = null
     })

@@ -36,6 +36,21 @@ const deleteProduct = async (req, res) => {
   } catch (error) {
     res.status(400).send({ success: false, message: error.message })
   }
-
 }
-export { createProduct, getAllProducts, deleteProduct }
+const updateProduct = async (req, res) => {
+  try {
+    const id = req.params.id
+    let { title, price } = req.body
+    const currentProduct = await product.findById(id)
+    title = title || currentProduct.title
+    price = price || currentProduct.price
+    if (!title || !price) {
+      return res.status(401).send({ success: false, message: "all fields are required" })
+    }
+    const updatedProduct = await product.findOneAndUpdate({ _id: id }, { title, price })
+    return res.status(200).send({ success: true, message: "product updated successfully" })
+  } catch (error) {
+    res.status(400).send({ success: false, message: error.message })
+  }
+}
+export { createProduct, getAllProducts, deleteProduct, updateProduct }
