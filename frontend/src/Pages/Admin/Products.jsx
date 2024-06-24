@@ -64,14 +64,8 @@ export default function Products() {
       toast.success(res.message, { autoClose: 1000 })
       dispatch(getAllProducts())
     })
-
   }
-  // console.log(products)
   useEffect(() => {
-    // axios.get("http://localhost:3000/api/products").then((response) => {
-    //   setProducts(response.data.data)
-    // })
-    //   .catch((err) => { console.log(err) })
     try {
       dispatch(getAllProducts())
     } catch (err) {
@@ -85,124 +79,111 @@ export default function Products() {
         <Link to="/admin/products/add"><Button>Add Product</Button></Link>
       </div>
       <div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Products</CardTitle>
-            <CardDescription>
-              Manage your products and view their sales performance.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="hidden w-[100px] sm:table-cell">
-                    <span className="sr-only">Image</span>
-                  </TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="hidden md:table-cell">Price</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Total Sales
-                  </TableHead>
-                  <TableHead className="hidden md:table-cell">Created at</TableHead>
-                  <TableHead>
-                    <span className="sr-only">Actions</span>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {products && products.map((product) => (
-                  <TableRow key={product._id}>
-                    <TableCell className="hidden sm:table-cell">
-                      <img
-                        alt="Product image"
-                        className="aspect-square rounded-md object-cover"
-                        height="64"
-                        src={product?.picture?.picture_url}
-                        width="64"
-                      />
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {product?.title}
-                    </TableCell>
-                    <TableCell>
-                      {product?.category?.name}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">${product?.price}</TableCell>
-                    <TableCell className="hidden md:table-cell">{product?.user?.name}</TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {dateFormat(product?.createdAt)}
-                    </TableCell>
-                    <TableCell>
-                      <Dialog>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button aria-haspopup="true" size="icon" variant="ghost">
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>
-                              <DialogTrigger asChild>
-                                <Button type="button" variant="outline">Edit Profile</Button>
-                              </DialogTrigger>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem><button type="button" onClick={() => handleDelete(product._id)}>Delete</button></DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        <DialogContent className="sm:max-w-[425px]">
-                          <DialogHeader>
-                            <DialogTitle>Edit Product</DialogTitle>
-                            <DialogDescription>
-                              Make changes to your product here. Click save when you're done.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="title" className="text-right">
-                                Title
-                              </Label>
-                              <Input
-                                id="title"
-                                ref={titleRef}
-                                placeholder="Leave empty for if unchanged"
-                                defaultValue=""
-                                className="col-span-3"
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="username" className="text-right">
-                                Price
-                              </Label>
-                              <Input
-                                id="price"
-                                placeholder="Leave empty for if unchanged"
-                                defaultValue=""
-                                ref={priceRef}
-                                className="col-span-3"
-                              />
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button type="button" onClick={() => handleUpdate(product._id)}>Save changes</Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-          <CardFooter>
-            <div className="text-xs text-muted-foreground">
-              Showing <strong>1-10</strong> of <strong>32</strong> products
-            </div>
-          </CardFooter>
-        </Card>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Sr.</TableHead>
+              <TableHead className="w-[100px] sm:table-cell">
+                Image
+              </TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead className="hidden md:table-cell">Price</TableHead>
+              <TableHead className="hidden md:table-cell">
+                Created By
+              </TableHead>
+              <TableHead className="hidden md:table-cell">Created at</TableHead>
+              <TableHead>
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {products && products.map((product) => (
+              <TableRow key={product._id}>
+                <TableCell>{products.indexOf(product) + 1}</TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  <img
+                    alt="Product image"
+                    className="aspect-square rounded-md object-cover"
+                    height="64"
+                    src={product?.picture?.picture_url}
+                    width="64"
+                  />
+                </TableCell>
+                <TableCell className="font-medium">
+                  {product?.title}
+                </TableCell>
+                <TableCell>
+                  {product?.category?.name}
+                </TableCell>
+                <TableCell className="hidden md:table-cell">${product?.price}</TableCell>
+                <TableCell className="hidden md:table-cell">{product?.user?.name}</TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {dateFormat(product?.createdAt)}
+                </TableCell>
+                <TableCell>
+                  <Dialog>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button aria-haspopup="true" size="icon" variant="ghost">
+                          <MoreHorizontal className="h-4 w-4" />
+                          <span className="sr-only">Toggle menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem>
+                          <DialogTrigger asChild>
+                            <Button type="button" variant="outline">Edit Profile</Button>
+                          </DialogTrigger>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem><button type="button" onClick={() => handleDelete(product._id)}>Delete</button></DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Edit Product</DialogTitle>
+                        <DialogDescription>
+                          Make changes to your product here. Click save when you're done.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="title" className="text-right">
+                            Title
+                          </Label>
+                          <Input
+                            id="title"
+                            ref={titleRef}
+                            placeholder="Leave empty for if unchanged"
+                            defaultValue=""
+                            className="col-span-3"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="username" className="text-right">
+                            Price
+                          </Label>
+                          <Input
+                            id="price"
+                            placeholder="Leave empty for if unchanged"
+                            defaultValue=""
+                            ref={priceRef}
+                            className="col-span-3"
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="button" onClick={() => handleUpdate(product._id)}>Save changes</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </>
   )
