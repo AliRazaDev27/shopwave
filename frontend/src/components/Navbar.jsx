@@ -1,3 +1,9 @@
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router-dom"
 import { CircleUser, Menu, Package2, Search } from "lucide-react"
 import { useDispatch } from "react-redux"
@@ -127,13 +133,13 @@ export default function Navbar() {
         </Sheet>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <form className="ml-auto flex-1 sm:flex-initial">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search products..."
-                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-              />
+            <div className="relative rounded-full outline outline-1 outline-offset-2 w-8 h-8 flex justify-center items-center">
+              <Popover>
+                <PopoverTrigger>
+                  <MdOutlineShoppingCart />
+                </PopoverTrigger>
+                <PopoverContent>Place content for the popover here.</PopoverContent>
+              </Popover>
             </div>
           </form>
           <div>
@@ -162,8 +168,8 @@ export default function Navbar() {
                 </DropdownMenu>
               </div>
             }</div>
-        </div>
-      </header>
+        </div >
+      </header >
     </>
   )
 }
