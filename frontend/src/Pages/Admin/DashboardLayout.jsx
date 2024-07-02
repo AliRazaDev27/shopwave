@@ -1,7 +1,7 @@
 import { logout } from "../../store/features/auth/authSlice.js"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { toast } from "react-toastify"
 import axios from "axios"
 import { Outlet, Link } from "react-router-dom"
@@ -35,6 +35,7 @@ export default function DashboardLayout() {
   const user = useSelector((state) => state.auth?.user)
 
   const navigate = useNavigate()
+  const location = useLocation()
   const dispatch = useDispatch()
   useEffect(() => {
     if (!user) {

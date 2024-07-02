@@ -18,10 +18,29 @@ const createProduct = async (req, res) => {
     res.status(400).send({ success: false, message: error.message })
   }
 }
+
 const getAllProducts = async (req, res) => {
   try {
-    const products = await product.find({}).populate("category").populate("user")
-    res.status(200).send({ success: true, message: "all products found", data: products })
+    if (req.query.page) {
+      const page = parseInt(req.query.page) || 1
+      const limit = parseInt(req.query.limit) || 12
+
+      const products = await product.find({}).skip((page - 1) * limit).limit(limit).populate("category").populate("user")
+      res.status(200).send({
+        success: true, message: "all products found", data:
+        {
+          products: products,
+          currentPage: page,
+          numberOfPages: Math.ceil((await product.countDocuments()) / limit)
+        }
+      })
+    }
+    else {
+      const products = await product.find({}).populate("category").populate("user")
+      res.status(200).send({
+        success: true, message: "all products found", data: products
+      })
+    }
   } catch (error) {
     res.status(400).send({ success: false, message: error.message })
   }

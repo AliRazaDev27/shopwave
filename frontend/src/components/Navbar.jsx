@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import {
   Popover,
   PopoverContent,
@@ -8,7 +9,7 @@ import { Link } from "react-router-dom"
 import { CircleUser, Menu, Package2, Search } from "lucide-react"
 import { useDispatch } from "react-redux"
 import { logout } from "../store/features/auth/authSlice"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { toast } from "react-toastify"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,6 +26,9 @@ import { useSelector } from "react-redux"
 export default function Navbar() {
   const user = useSelector((state) => state.auth?.user?.user)
   const dispatch = useDispatch()
+  const location = useLocation()
+  const pathname = location.pathname
+  console.log(pathname)
   const navigate = useNavigate()
   function handleLogout() {
     console.log("logout")
@@ -58,25 +62,33 @@ export default function Navbar() {
           </Link>
           <Link
             to="/"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className={clsx("text-muted-foreground transition-colors hover:text-foreground", {
+              "text-orange-500": pathname === "/",
+            })}
           >
             Home
           </Link>
           <Link
             to="/shop"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className={clsx("text-muted-foreground transition-colors hover:text-foreground", {
+              "text-orange-500": pathname === "/shop",
+            })}
           >
             Shop
           </Link>
           <Link
             to="/about"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className={clsx("text-muted-foreground transition-colors hover:text-foreground", {
+              "text-orange-500": pathname === "/about",
+            })}
           >
             About
           </Link>
           <Link
             to="/contact"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className={clsx("text-muted-foreground transition-colors hover:text-foreground", {
+              "text-orange-500": pathname === "/contact",
+            })}
           >
             Contact
           </Link>
@@ -106,25 +118,33 @@ export default function Navbar() {
               </Link>
               <Link
                 to="/"
-                className="text-muted-foreground hover:text-foreground"
+                className={clsx("text-muted-foreground transition-colors hover:text-foreground", {
+                  "text-orange-500": pathname === "/",
+                })}
               >
                 Home
               </Link>
               <Link
                 to="/shop"
-                className="text-muted-foreground hover:text-foreground"
+                className={clsx("text-muted-foreground transition-colors hover:text-foreground", {
+                  "text-orange-500": pathname === "/shop",
+                })}
               >
                 Shop
               </Link>
               <Link
                 to="/about"
-                className="text-muted-foreground hover:text-foreground"
+                className={clsx("text-muted-foreground transition-colors hover:text-foreground", {
+                  "text-orange-500": pathname === "/about",
+                })}
               >
                 About
               </Link>
               <Link
                 to="/contact"
-                className="text-muted-foreground hover:text-foreground"
+                className={clsx("text-muted-foreground transition-colors hover:text-foreground", {
+                  "text-orange-500": pathname === "/contact",
+                })}
               >
                 Contact
               </Link>

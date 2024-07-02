@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 export default function CardProduct({ product }) {
   const dispatch = useDispatch()
-  console.log(product)
   async function handleAddToCart(id) {
     dispatch(addToCart(id))
   }

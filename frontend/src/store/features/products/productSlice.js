@@ -15,9 +15,19 @@ export const addProduct = createAsyncThunk('product/addProduct', async (inputVal
     return thunkAPI.rejectWithValue(error)
   }
 })
+
 export const getAllProducts = createAsyncThunk('product/getAllProducts', async (_, thunkAPI) => {
   try {
     const response = await productService.getAllProducts()
+    return response
+  }
+  catch (error) {
+    return thunkAPI.rejectWithValue(error)
+  }
+})
+export const getPaginatedProducts = createAsyncThunk('product/getPaginatedProducts', async (inputValues, thunkAPI) => {
+  try {
+    const response = await productService.getPaginatedProducts(inputValues.page, inputValues.limit)
     return response
   }
   catch (error) {
@@ -70,6 +80,19 @@ const productSlice = createSlice({
       state.error = action.payload
       state.products = []
     }).addCase(getAllProducts.pending, (state) => {
+      state.status = "loading"
+      state.error = null
+    })
+
+    builder.addCase(getPaginatedProducts.fulfilled, (state, action) => {
+      state.products = action.payload
+      state.status = "success"
+      state.error = null
+    }).addCase(getPaginatedProducts.rejected, (state, action) => {
+      state.status = "failed"
+      state.error = action.payload
+      state.products = []
+    }).addCase(getPaginatedProducts.pending, (state) => {
       state.status = "loading"
       state.error = null
     })

@@ -1,8 +1,17 @@
 import axios from "axios"
 
-const getAllProducts = async () => {
+const getAllProducts = async (page, limit) => {
   try {
-    const response = await axios.get("http://localhost:3000/api/products")
+    const response = await axios.get(`http://localhost:3000/api/products`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+const getPaginatedProducts = async (page, limit) => {
+  try {
+    console.log("here")
+    const response = await axios.get(`http://localhost:3000/api/products?page=${page}&limit=${limit}`)
     return response.data
   } catch (error) {
     console.log(error)
@@ -33,4 +42,4 @@ const updateProduct = async (inputValues) => {
     console.log(error)
   }
 }
-export default { getAllProducts, deleteProduct, createProduct, updateProduct }
+export default { getAllProducts, getPaginatedProducts, deleteProduct, createProduct, updateProduct }
