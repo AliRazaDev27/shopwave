@@ -18,7 +18,14 @@ const createProduct = async (req, res) => {
     res.status(400).send({ success: false, message: error.message })
   }
 }
-
+const getProduct = async (req, res) => {
+  try {
+    const _product = await product.findById(req.params.id).populate("category").populate("user")
+    res.status(200).send({ success: true, message: "product found", data: _product })
+  } catch (error) {
+    res.status(400).send({ success: false, message: error.message })
+  }
+}
 const getAllProducts = async (req, res) => {
   try {
     if (req.query.page) {
@@ -59,17 +66,24 @@ const deleteProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const id = req.params.id
-    let { title, price } = req.body
-    const currentProduct = await product.findById(id)
-    title = title || currentProduct.title
-    price = price || currentProduct.price
-    if (!title || !price) {
-      return res.status(401).send({ success: false, message: "all fields are required" })
+    console.log(id)
+    console.log(req.body)
+    console.log(req.file)
+    let { title, description, price, category, user, picture } = req.body
+    if (picture.public_id !== "null") {
+      await deleteImageFromCloudinary(picture.public_id)
     }
-    const updatedProduct = await product.findOneAndUpdate({ _id: id }, { title, price })
+    if (req.file) {
+      const result = await uploadImageOnCloudinary(req.file?.path, "products")
+      const updatedProduct = await product.findByIdAndUpdate(id, { title, description, price, category, user, picture: { picture_url: result.secure_url, public_id: result.public_id } })
+    }
+    else {
+      const updatedProduct = await product.findByIdAndUpdate(id, { title, description, price, category: category._id, user })
+    }
+
     return res.status(200).send({ success: true, message: "product updated successfully" })
   } catch (error) {
     res.status(400).send({ success: false, message: error.message })
   }
 }
-export { createProduct, getAllProducts, deleteProduct, updateProduct }
+export { createProduct, getProduct, getAllProducts, deleteProduct, updateProduct }

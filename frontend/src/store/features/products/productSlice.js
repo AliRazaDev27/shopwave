@@ -5,7 +5,6 @@ const initialState = {
   status: 'idle',
   error: null
 }
-
 export const addProduct = createAsyncThunk('product/addProduct', async (inputValues, thunkAPI) => {
   try {
     const response = await productService.createProduct(inputValues)

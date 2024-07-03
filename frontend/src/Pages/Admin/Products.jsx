@@ -123,62 +123,21 @@ export default function Products() {
                   {dateFormat(product?.createdAt)}
                 </TableCell>
                 <TableCell>
-                  <Dialog>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>
-                          <DialogTrigger asChild>
-                            <Button type="button" variant="outline">Edit Profile</Button>
-                          </DialogTrigger>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem><button type="button" onClick={() => handleDelete(product._id)}>Delete</button></DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Edit Product</DialogTitle>
-                        <DialogDescription>
-                          Make changes to your product here. Click save when you're done.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="title" className="text-right">
-                            Title
-                          </Label>
-                          <Input
-                            id="title"
-                            ref={titleRef}
-                            placeholder="Leave empty for if unchanged"
-                            defaultValue=""
-                            className="col-span-3"
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="username" className="text-right">
-                            Price
-                          </Label>
-                          <Input
-                            id="price"
-                            placeholder="Leave empty for if unchanged"
-                            defaultValue=""
-                            ref={priceRef}
-                            className="col-span-3"
-                          />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button type="button" onClick={() => handleUpdate(product._id)}>Save changes</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button aria-haspopup="true" size="icon" variant="ghost">
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">Toggle menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem>
+                        <Link to="/admin/products/edit" state={{id:product._id}}>Edit</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem><button type="button" onClick={() => handleDelete(product._id)}>Delete</button></DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}

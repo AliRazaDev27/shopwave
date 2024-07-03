@@ -36,7 +36,13 @@ const createProduct = async (inputValues) => {
 }
 const updateProduct = async (inputValues) => {
   try {
-    const response = await axios.put(`http://localhost:3000/api/products/${inputValues.id}`, inputValues)
+    console.log(inputValues)
+    // BUG: check inputValues for all fields present and correct
+    const response = await axios.put(`http://localhost:3000/api/products/${inputValues._id}`, inputValues, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
     return response.data
   } catch (error) {
     console.log(error)
